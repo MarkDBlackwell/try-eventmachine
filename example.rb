@@ -15,11 +15,15 @@ module EchoServer
   end
 end
 
-EM.run {
-  EM.start_server '127.0.0.1', 8081, EchoServer
+EM.run do
+# EM.start_server '127.0.0.1', 8081, EchoServer
   c = 0
   pt = EM::PeriodicTimer.new(1) { puts "Tick #{c+=1}" }
   EM::Timer.new(3) { pt.cancel }
-  EM::Timer.new(6) { EM.stop_event_loop }
-}
+  EM::Timer.new(6) do
+    EM.next_tick do
+      EM.stop_event_loop
+    end
+  end
+end
 raise 'hello'
