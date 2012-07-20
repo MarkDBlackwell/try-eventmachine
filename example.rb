@@ -15,6 +15,11 @@ module EchoServer
   end
 end
 
-EventMachine::run {
-  EventMachine::start_server "127.0.0.1", 8081, EchoServer
+EM.run {
+  EM.start_server '127.0.0.1', 8081, EchoServer
+  c = 0
+  pt = EM::PeriodicTimer.new(1) { puts "Tick #{c+=1}" }
+  EM::Timer.new(3) { pt.cancel }
+  EM::Timer.new(6) { EM.stop_event_loop }
 }
+raise 'hello'
