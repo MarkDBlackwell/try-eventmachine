@@ -5,7 +5,10 @@ require "rubygems"
 require 'amqp'
 
 def amqp_settings
-  uri = URI.parse(ENV["AMQP_URL"] || 'amqp://guest:guest@localhost:5672/')
+  u = ENV['CLOUDAMQP_URL']
+
+# uri = URI.parse (ENV["AMQP_URL"] || 'amqp://guest:guest@localhost:5672/')
+  uri = URI.parse u
   {
     :vhost => uri.path,
     :host => uri.host,

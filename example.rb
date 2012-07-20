@@ -2,8 +2,6 @@ require 'eventmachine'
 
 # http://rubylearning.com/blog/2010/10/01/an-introduction-to-eventmachine-and-how-to-avoid-callback-spaghetti/
 
-u = ENV['CLOUDAMQP_URL']
-
 EM.run do
   require 'em-http'
 
