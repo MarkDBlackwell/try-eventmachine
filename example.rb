@@ -40,8 +40,14 @@ EM.run do
   cb = proc {|a| puts "Callback receives: #{a}"}
   puts "Callback is #{cb.inspect}"
 
+  dj = 'dj'
+  dj2 = 'dj2'
   job = proc do
     puts "Defer #{Thread.current}\n"
+    EM.next_tick do
+      puts "dj  is #{dj .inspect}"
+      puts "dj2 is #{dj2.inspect}"
+    end
     n = 2
     sleep n
     puts "After sleep #{n}"
@@ -50,6 +56,6 @@ EM.run do
   end
   puts "Job is #{job.inspect}"
 
-  EM.defer job, cb
+  dj = EM.defer job, cb
 end
 # raise 'hello'
