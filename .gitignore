@@ -1,0 +1,10 @@
+*.zip
+/.bundle/config
+/.env
+/.foreman
+/local-env
+/download/
+/out/
+/private/
+copy-of-*
+/out/
