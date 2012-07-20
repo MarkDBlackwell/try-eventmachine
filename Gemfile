@@ -6,3 +6,5 @@ ruby '1.9.3'
 gem 'bundler', '~>1.2.0.pre'
 
 gem 'eventmachine', '~>1.0.0.rc.4'
+
+gem 'em-http-request'
