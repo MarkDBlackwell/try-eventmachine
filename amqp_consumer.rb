@@ -1,59 +1,38 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-require "rubygems"
 require 'amqp'
+require 'dalli'
+require 'em-pusher'
 
-def amqp_settings
-  u = ENV['CLOUDAMQP_URL']
+AMQP_URL = ENV['CLOUDAMQP_URL']
+EXCHANGE_NAME = 'com.herokuapp.delayed-webrequest'
+QUEUE_NAME    = 'com.herokuapp.delayed-webrequest'
 
-# uri = URI.parse (ENV["AMQP_URL"] || 'amqp://guest:guest@localhost:5672/')
-  uri = URI.parse u
-  {
-    :vhost => uri.path,
-    :host => uri.host,
-    :user => uri.user,
-    :port => uri.port || 5672,
-    :pass => uri.password,
-    :heartbeat => 120,
-    :logging => false
-  }
-rescue Object => e
-  raise "invalid AMQP_URL: (#{uri.inspect}) #{e.class} -> #{e.message}"
-end
+DALLI_CLIENT=Dalli::Client.new \
+                 ENV['MEMCACHIER_SERVERS' ], {
+    :username => ENV['MEMCACHIER_USERNAME'],
+    :password => ENV['MEMCACHIER_PASSWORD']  }
 
-p amqp_settings
+PUSHER = EM::Pusher.new \
+    :app_id      => ENV['PUSHER_APP_ID'],
+    :auth_key    => ENV['PUSHER_KEY'   ],
+    :auth_secret => ENV['PUSHER_SECRET'],
+    :channel     =>     'test_channel'
 
-def log(*args)
-  puts args.inspect
-end
+c = 0
 
 EM.run do
-  puts "Running..."
-  AMQP.start(amqp_settings) do |connection|
-    log "Connected to AMQP broker"
-
-    channel  = AMQP::Channel.new(connection)
-    channel.prefetch(1)
-    queue    = channel.queue("test.hello.world")
-    exchange = channel.direct
-    queue.bind(exchange)
-    
-    @count = 0
-    
-    queue.subscribe(:ack => true) do |h, payload|
-      puts "--"
-      EM.defer {
-        # sleep(1)
-        @count += 1
-        log "Received a message: #{payload} - #{@count}"
-        h.ack
-      }
+  connection = AMQP.connect AMQP_URL
+  channel = AMQP::Channel.new connection
+  exchange = channel.direct EXCHANGE_NAME
+  queue = channel.queue QUEUE_NAME
+  queue.bind exchange
+  queue.subscribe do |payload|
+    c += 1
+    DALLI_CLIENT.set 'foo', 'Hello from EventMachine (Memcachier)'
+    EM::Timer.new(1) do
+      PUSHER.trigger 'greet', :greeting => "Hello from EventMachine (Pusher) #{c}"
     end
-    
-    # queue.subscribe(:ack => false) do |h, payload|
-    #   @count += 1
-    #   log "Received a message: #{payload} - #{@count}"
-    # end
-  end  
+  end
 end

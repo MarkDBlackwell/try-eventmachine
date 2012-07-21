@@ -1,6 +1,7 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
+    addressable (2.2.8)
     amq-client (0.9.4)
       amq-protocol (>= 0.9.4)
       eventmachine
@@ -9,12 +10,26 @@ GEM
       amq-client (~> 0.9.4)
       amq-protocol (>= 0.9.4)
       eventmachine
+    dalli (2.1.0)
+    em-http-request (0.2.15)
+      addressable (>= 2.0.0)
+      eventmachine (>= 0.12.9)
+    em-pusher (0.1.0)
+      em-http-request (~> 0.2.10)
+      ruby-hmac (~> 0.4.0)
+      yajl-ruby (~> 0.7.6)
     eventmachine (1.0.0.rc.4)
+    memcachier (0.0.1)
+    ruby-hmac (0.4.0)
+    yajl-ruby (0.7.9)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  amqp (~> 0.7)
+  amqp
   bundler (~> 1.2.0.pre)
+  dalli
+  em-pusher
   eventmachine (~> 1.0.0.rc.4)
+  memcachier
