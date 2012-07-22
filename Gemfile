@@ -9,8 +9,10 @@ gem 'amqp'
 
 gem 'dalli'
 
+gem 'em-http-request'
+
 gem 'em-pusher'
 
 gem 'eventmachine', '~>1.0.0.rc.4'
 
-gem 'memcachier'
+# gem 'memcachier'

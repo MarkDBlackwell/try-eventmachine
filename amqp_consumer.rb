@@ -3,11 +3,12 @@
 
 require 'amqp'
 require 'dalli'
+require 'em-http-request'
 require 'em-pusher'
 
-AMQP_URL = ENV['CLOUDAMQP_URL']
-EXCHANGE_NAME = 'com.herokuapp.delayed-webrequest'
-QUEUE_NAME    = 'com.herokuapp.delayed-webrequest'
+AMQP_URL      = ENV['CLOUDAMQP_URL']
+EXCHANGE_NAME =     'com.herokuapp.delayed-webrequest'
+QUEUE_NAME    =     'com.herokuapp.delayed-webrequest'
 
 DALLI_CLIENT=Dalli::Client.new \
                  ENV['MEMCACHIER_SERVERS' ], {
@@ -20,6 +21,9 @@ PUSHER = EM::Pusher.new \
     :auth_secret => ENV['PUSHER_SECRET'],
     :channel     =>     'test_channel'
 
+
+##url = 'http://whoismyrepresentative.com/whoismyrep.php?zip=46544'
+
 c = 0
 
 EM.run do
@@ -29,10 +33,27 @@ EM.run do
   queue = channel.queue QUEUE_NAME
   queue.bind exchange
   queue.subscribe do |payload|
-    c += 1
-    DALLI_CLIENT.set 'foo', 'Hello from EventMachine (Memcachier)'
-    EM::Timer.new(1) do
-      PUSHER.trigger 'greet', :greeting => "Hello from EventMachine (Pusher) #{c}"
+    p(url = payload)
+
+    http = EM::HttpRequest.new(url).get
+    http.errback { p "Bad DNS: #{url}" }
+    http.headers do |hash|
+      headers_before = [:headers, hash]
+    end
+    http.callback do
+      status        = http.response_header.status
+      headers_after = http.response_header.inspect
+      response      = http.response
+
+      s = [status, url, headers_after, response]
+
+      DALLI_CLIENT.set 'foo', s
+
+      EM::Timer.new(1) do
+        c += 1
+        PUSHER.trigger 'greet', :greeting => "Hello from EventMachine (Pusher) #{c}"
+      end
+
     end
   end
 end

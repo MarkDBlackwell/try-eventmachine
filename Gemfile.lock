@@ -19,7 +19,6 @@ GEM
       ruby-hmac (~> 0.4.0)
       yajl-ruby (~> 0.7.6)
     eventmachine (1.0.0.rc.4)
-    memcachier (0.0.1)
     ruby-hmac (0.4.0)
     yajl-ruby (0.7.9)
 
@@ -30,6 +29,6 @@ DEPENDENCIES
   amqp
   bundler (~> 1.2.0.pre)
   dalli
+  em-http-request
   em-pusher
   eventmachine (~> 1.0.0.rc.4)
-  memcachier
