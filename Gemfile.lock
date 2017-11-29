@@ -7,20 +7,21 @@ GEM
     amqp (1.7.0)
       amq-protocol (>= 2.1.0)
       eventmachine
+    cookiejar (0.3.3)
     dalli (2.7.6)
-    em-http-request (0.2.15)
-      addressable (>= 2.0.0)
-      eventmachine (>= 0.12.9)
-    em-pusher (0.1.0)
-      em-http-request (~> 0.2.10)
-      ruby-hmac (~> 0.4.0)
-      yajl-ruby (~> 0.7.6)
+    em-http-request (1.1.5)
+      addressable (>= 2.3.4)
+      cookiejar (!= 0.3.1)
+      em-socksify (>= 0.3)
+      eventmachine (>= 1.0.3)
+      http_parser.rb (>= 0.6.0)
+    em-socksify (0.3.1)
+      eventmachine (>= 1.0.0.beta.4)
     eventmachine (1.2.5)
     eventmachine (1.2.5-x86-mingw32)
+    http_parser.rb (0.6.0)
     public_suffix (3.0.1)
     rack (2.0.3)
-    ruby-hmac (0.4.0)
-    yajl-ruby (0.7.9)
 
 PLATFORMS
   ruby
@@ -30,7 +31,6 @@ DEPENDENCIES
   amqp
   dalli
   em-http-request
-  em-pusher
   eventmachine
   rack
 
