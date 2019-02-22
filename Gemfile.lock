@@ -21,7 +21,7 @@ GEM
     eventmachine (1.2.5-x86-mingw32)
     http_parser.rb (0.6.0)
     public_suffix (3.0.1)
-    rack (2.0.3)
+    rack (2.0.6)
 
 PLATFORMS
   ruby
@@ -32,10 +32,10 @@ DEPENDENCIES
   dalli
   em-http-request
   eventmachine
-  rack
+  rack (>= 2.0.6)
 
 RUBY VERSION
    ruby 2.2.5p319
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

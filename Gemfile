@@ -18,5 +18,5 @@ gem 'em-http-request'
 #gem 'eventmachine', '~>1.0.0.rc.4'
 gem 'eventmachine'
 
-gem 'rack'
-
+# gem 'rack'
+gem 'rack', '>= 2.0.6'
